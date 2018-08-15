@@ -63,7 +63,7 @@ MVVM.prototype._observer = function (data) {
                     get: function () {
                         return value;
                     },
-                    set(newval) {
+                    set: function(newval) {
                         if (newval === value) {
                             return;
                         }
