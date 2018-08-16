@@ -132,6 +132,50 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
     });
     return promise2
 }
+
+Promise.reject = function (reason) {
+    return new Promise((resolve, reject) => {
+        reject(reason);
+    })
+}
+
+Promise.resolve = function (value) {
+    return new Promise((resolve, reject) => {
+        resolve(value);
+    })
+}
+
+Promise.prototype.catch = function (onRejected) {
+    return this.then(null, onRejected);
+};
+
+Promise.all = function (promises) {
+    return new Promise((resolve, reject) => {
+        let arr = [];
+        let i = 0;
+
+        function processData(index, data) {
+            arr[index] = data;
+            if (++i == promises.length) {
+                resolve(arr);
+            }
+        }
+        for (let i = 0; i < promises.length; i++) {
+            promises[i].then(data => {
+                processData(i, data);
+            }, reject);
+        }
+    })
+}
+
+Promise.race = function (promises) {
+    return new Promise((resolve, reject) => {
+        for (let i = 0; i < promises.length; i++) {
+            promises[i].then(resolve, reject);
+        }
+    })
+}
+
 Promise.defer = Promise.deferred = function () {
     let dfd = {};
     dfd.promise = new Promise((resolve, reject) => {
